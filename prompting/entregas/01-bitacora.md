@@ -65,19 +65,14 @@ Me sirvio tal cual
 ```
 
 
-
-*(Repetí la estructura para cada prompt. Si resolviste todo con un solo prompt gigante, ⚠️ eso es 🟡 según EFSI — explicá por qué.)*
-
----
-
 ## 3. 🔧 Qué hizo la IA y qué hice yo
 
 Marcá esto **también en el código** con comentarios `// [IA]` y `// [YO]`. Acá resumilo:
 
 | Archivo / función | Lo generó la IA | Lo modifiqué/escribí yo | Por qué |
-|---|---|---|---|
-| | | | |
-| | | | |
+|materias-repository|genero todo|---|---|
+|materias-service |genero todo | | |
+|materias-controller |genero gran parte |Modifique una return .json |Lo considere poco claro ya que si eliminaba a una materia retornaba null |
 
 ---
 
