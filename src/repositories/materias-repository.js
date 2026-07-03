@@ -1,24 +1,19 @@
 import Db from './db-pg.js';
+import GenericRepository from './generic-repository.js';
 
-// [IA]
 export default class MateriasRepository {
     constructor() {
         console.log('Estoy en: MateriasRepository.constructor()');
         this.db = new Db();
+        this.base = new GenericRepository('materias', 'MateriasRepository');
     }
 
-    getAllAsync = async () => {
-        console.log(`MateriasRepository.getAllAsync()`);
-        const sql = `SELECT * FROM materias`;
-        return await this.db.queryAll(sql);
-    }
+    // Métodos delegados a la composición
+    getAllAsync = async () => await this.base.getAllAsync();
+    getByIdAsync = async (id) => await this.base.getByIdAsync(id);
+    deleteByIdAsync = async (id) => await this.base.deleteByIdAsync(id);
 
-    getByIdAsync = async (id) => {
-        console.log(`MateriasRepository.getByIdAsync(${id})`);
-        const sql = `SELECT * FROM materias WHERE id=$1`;
-        return await this.db.queryOne(sql, [id]);
-    }
-
+    // Métodos específicos
     createAsync = async (entity) => {
         console.log(`MateriasRepository.createAsync(${JSON.stringify(entity)})`);
         const sql = `INSERT INTO materias (nombre) VALUES ($1) RETURNING id`;
@@ -29,15 +24,7 @@ export default class MateriasRepository {
     updateAsync = async (entity) => {
         console.log(`MateriasRepository.updateAsync(${JSON.stringify(entity)})`);
         const sql = `UPDATE materias SET nombre = $2 WHERE id = $1`;
-        const values =  [   entity.id, 
-                            entity?.nombre ?? ''
-                        ];
+        const values = [entity.id, entity?.nombre ?? ''];
         return await this.db.queryRowCount(sql, values);
-    }
-
-    deleteByIdAsync = async (id) => {
-        console.log(`MateriasRepository.deleteByIdAsync(${id})`);
-        const sql = `DELETE FROM materias WHERE id=$1`;
-        return await this.db.queryRowCount(sql, [id]);
     }
 }

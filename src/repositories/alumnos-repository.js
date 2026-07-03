@@ -1,23 +1,19 @@
 import Db from './db-pg.js';
+import GenericRepository from './generic-repository.js';
 
 export default class AlumnosRepository {
     constructor() {
         console.log('Estoy en: AlumnosRepository-new.constructor()');
         this.db = new Db();
+        this.base = new GenericRepository('alumnos', 'AlumnosRepository-new');
     }
 
-    getAllAsync = async () => {
-        console.log(`AlumnosRepository-new.getAllAsync()`);
-        const sql = `SELECT * FROM alumnos`;
-        return await this.db.queryAll(sql);
-    }
+    // Métodos delegados a la composición
+    getAllAsync = async () => await this.base.getAllAsync();
+    getByIdAsync = async (id) => await this.base.getByIdAsync(id);
+    deleteByIdAsync = async (id) => await this.base.deleteByIdAsync(id);
 
-    getByIdAsync = async (id) => {
-        console.log(`AlumnosRepository-new.getByIdAsync(${id})`);
-        const sql = `SELECT * FROM alumnos WHERE id=$1`;
-        return await this.db.queryOne(sql, [id]);
-    }
-
+    // Métodos específicos
     createAsync = async (entity) => {
         console.log(`AlumnosRepository-new.createAsync(${JSON.stringify(entity)})`);
         const sql = ` INSERT INTO alumnos (
@@ -47,7 +43,7 @@ export default class AlumnosRepository {
         console.log(`AlumnosRepository-new.updateAsync(${JSON.stringify(entity)})`);
         let id = entity.id;
 
-        const previousEntity = await this.getByIdAsync(id);
+        const previousEntity = await this.getByIdAsync(id); // Sigue funcionando internamente
         if (previousEntity == null) return 0;
 
         const sql = `UPDATE alumnos SET
@@ -66,11 +62,5 @@ export default class AlumnosRepository {
             entity?.hace_deportes    ?? previousEntity?.hace_deportes
         ];
         return await this.db.queryRowCount(sql, values);
-    }
-
-    deleteByIdAsync = async (id) => {
-        console.log(`AlumnosRepository-new.deleteByIdAsync(${id})`);
-        const sql = `DELETE FROM alumnos WHERE id=$1`;
-        return await this.db.queryRowCount(sql, [id]);
     }
 }
