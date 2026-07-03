@@ -119,5 +119,5 @@ Al revisar el código, corregí un detalle endpoint del DELETE. Originalmente, l
 ## 7. 🔗 Adjuntos
 
 - [x] Link/PDF de la conversación completa con la IA (prompting 01)
-- [x] Commit(s) en GitHub: `__  __________`
+- [x] Commit(s) en GitHub: `_1_  _611930c63aa83bfc90ed2f614d21db9a14fb2670_________`
 - [x] Capturas / evidencias de verificación
