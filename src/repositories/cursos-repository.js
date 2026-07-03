@@ -12,7 +12,7 @@ export default class CursosRepository {
         return await this.db.queryAll(sql);
     }
 
-    getByIdAsync = async (id) => {
+    getByIdAsync = async (id) => {  
         console.log(`CursosRepository.getByIdAsync(${id})`);
         const sql = `SELECT * FROM cursos WHERE id=$1`;
         return await this.db.queryOne(sql, [id]);
