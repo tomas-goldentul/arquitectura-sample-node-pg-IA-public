@@ -30,37 +30,36 @@ export default class AlumnosRepository {
                             $5
                         ) RETURNING id`;
         const values = [
-            entity?.nombre           ?? '',
-            entity?.apellido         ?? '',
-            entity?.id_curso         ?? 0,
+            entity?.nombre ?? '',
+            entity?.apellido ?? '',
+            entity?.id_curso ?? 0,
             entity?.fecha_nacimiento ?? null,
-            entity?.hace_deportes    ?? 0
+            entity?.hace_deportes ?? 0
         ];
         return await this.db.queryReturnId(sql, values);
     }
 
     updateAsync = async (entity) => {
         console.log(`AlumnosRepository-new.updateAsync(${JSON.stringify(entity)})`);
-        let id = entity.id;
 
-        const previousEntity = await this.getByIdAsync(id); // Sigue funcionando internamente
-        if (previousEntity == null) return 0;
+    //[YO: ELIMINE ESTO YA QUE CONSIDERE QUE NO HACIA FALTA VERIFICICAR SI EL ID EXISTE LLAMANDO AL METODO GET ID  YA QUE EL METODO RETORNA QUERYROWCOUNT, asi que si no encontro el id retorna 0] let id = entity.id; const previousEntity = await this.getByIdAsync(id);if (previousEntity == null) return 0;
 
         const sql = `UPDATE alumnos SET
-                        nombre              = $2,
-                        apellido            = $3,
-                        id_curso            = $4,
-                        fecha_nacimiento    = $5,
-                        hace_deportes       = $6
-                    WHERE id = $1`;
+                    nombre              = $2,
+                    apellido            = $3,
+                    id_curso            = $4,
+                    fecha_nacimiento    = $5,
+                    hace_deportes       = $6
+                WHERE id = $1`;
+
         const values = [
-            id,
-            entity?.nombre           ?? previousEntity?.nombre,
-            entity?.apellido         ?? previousEntity?.apellido,
-            entity?.id_curso         ?? previousEntity?.id_curso,
-            entity?.fecha_nacimiento ?? previousEntity?.fecha_nacimiento,
-            entity?.hace_deportes    ?? previousEntity?.hace_deportes
+            entity.id,
+            entity?.nombre ?? '',
+            entity?.apellido ?? '',
+            entity?.id_curso ?? 0,
+            entity?.fecha_nacimiento ?? null,
+            entity?.hace_deportes ?? 0
         ];
-        return await this.db.queryRowCount(sql, values);
+        return await this.base.db.queryRowCount(sql, values);
     }
 }
