@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import CursosService from './../services/cursos-service.js'
+import ResponseHelper from './../helpers/response-helper.js'
 
 const router = Router();
 const currentService = new CursosService();
@@ -10,13 +11,13 @@ router.get('', async (req, res) => {
         console.log(`CursosController.get`);
         const returnArray = await currentService.getAllAsync();
         if (returnArray != null){
-            res.status(StatusCodes.OK).json(returnArray);
+            return ResponseHelper.json(res, StatusCodes.OK, returnArray);
         } else {
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(`Error interno.`);
+            return ResponseHelper.send(res, StatusCodes.INTERNAL_SERVER_ERROR, `Error interno.`);
         }
     } catch (error) {
         console.log(error);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(`Error: ${error.message}`);
+        return ResponseHelper.send(res, StatusCodes.INTERNAL_SERVER_ERROR, `Error: ${error.message}`);
     }
 });
 
@@ -25,13 +26,13 @@ router.get('/:id', async (req, res) => {
         let id = req.params.id;
         const returnEntity = await currentService.getByIdAsync(id);
         if (returnEntity != null){
-            res.status(StatusCodes.OK).json(returnEntity);
+            return ResponseHelper.json(res, StatusCodes.OK, returnEntity);
         } else {
-            res.status(StatusCodes.NOT_FOUND).send(`No se encontro la entidad (id:${id}).`);
+            return ResponseHelper.send(res, StatusCodes.NOT_FOUND, `No se encontro la entidad (id:${id}).`);
         }
     } catch (error) {
         console.log(error);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(`Error: ${error.message}`);
+        return ResponseHelper.send(res, StatusCodes.INTERNAL_SERVER_ERROR, `Error: ${error.message}`);
     }
 });
 
@@ -40,13 +41,13 @@ router.post('', async (req, res) => {
         let entity = req.body;
         const newId = await currentService.createAsync(entity);
         if (newId > 0 ){
-            res.status(StatusCodes.CREATED).json(newId);
+            return ResponseHelper.json(res, StatusCodes.CREATED, newId);
         } else {
-            res.status(StatusCodes.BAD_REQUEST).json(null);
+            return ResponseHelper.json(res, StatusCodes.BAD_REQUEST, null);
         }
     } catch (error) {
         console.log(error);
-        res.status(StatusCodes.BAD_REQUEST).send(`Error: ${error.message}`);
+        return ResponseHelper.send(res, StatusCodes.BAD_REQUEST, `Error: ${error.message}`);
     }
 });
 
@@ -56,19 +57,19 @@ router.put('/:id', async (req, res) => {
         let entity = req.body;
 
         if (entity.id && parseInt(entity.id) !== id) {
-            return res.status(StatusCodes.BAD_REQUEST).send(`El id de la URL (${id}) no coincide con el id del body (${entity.id}).`);
+            return ResponseHelper.send(res, StatusCodes.BAD_REQUEST, `El id de la URL (${id}) no coincide con el id del body (${entity.id}).`);
         }
 
         entity.id = id;
         const rowsAffected = await currentService.updateAsync(entity);
         if (rowsAffected != 0){
-            res.status(StatusCodes.OK).json(rowsAffected);
+            return ResponseHelper.json(res, StatusCodes.OK, rowsAffected);
         } else {
-            res.status(StatusCodes.NOT_FOUND).send(`No se encontro la entidad (id:${id}).`);
+            return ResponseHelper.send(res, StatusCodes.NOT_FOUND, `No se encontro la entidad (id:${id}).`);
         }
     } catch (error) {
         console.log(error);
-        res.status(StatusCodes.BAD_REQUEST).send(`Error: ${error.message}`);
+        return ResponseHelper.send(res, StatusCodes.BAD_REQUEST, `Error: ${error.message}`);
     }
 });
 
@@ -77,13 +78,13 @@ router.delete('/:id', async (req, res) => {
         let id = req.params.id;
         const rowCount = await currentService.deleteByIdAsync(id);
         if (rowCount != 0){
-            res.status(StatusCodes.OK).json(null);
+            return ResponseHelper.json(res, StatusCodes.OK, null);
         } else {
-            res.status(StatusCodes.NOT_FOUND).send(`No se encontro la entidad (id:${id}).`);
+            return ResponseHelper.send(res, StatusCodes.NOT_FOUND, `No se encontro la entidad (id:${id}).`);
         }
     } catch (error) {
         console.log(error);
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).send(`Error: ${error.message}`);
+        return ResponseHelper.send(res, StatusCodes.INTERNAL_SERVER_ERROR, `Error: ${error.message}`);
     }
 });
 
