@@ -17,32 +17,24 @@ export default class AlumnosRepository {
     createAsync = async (entity) => {
         console.log(`AlumnosRepository-new.createAsync(${JSON.stringify(entity)})`);
         const sql = ` INSERT INTO alumnos (
-                            nombre              ,
-                            apellido            ,
-                            id_curso            ,
-                            fecha_nacimiento    ,
+                            nombre,
+                            apellido,
+                            id_curso,
+                            fecha_nacimiento,
                             hace_deportes
-                        ) VALUES (
-                            $1,
-                            $2,
-                            $3,
-                            $4,
-                            $5
-                        ) RETURNING id`;
+                        ) VALUES ($1, $2, $3, $4, $5) RETURNING id`;
         const values = [
-            entity?.nombre ?? '',
-            entity?.apellido ?? '',
-            entity?.id_curso ?? 0,
-            entity?.fecha_nacimiento ?? null,
-            entity?.hace_deportes ?? 0
+            entity.nombre,
+            entity.apellido,
+            entity.id_curso,
+            entity.fecha_nacimiento || null,
+            entity.hace_deportes !== undefined ? entity.hace_deportes : false
         ];
         return await this.db.queryReturnId(sql, values);
     }
 
     updateAsync = async (entity) => {
         console.log(`AlumnosRepository-new.updateAsync(${JSON.stringify(entity)})`);
-
-    //[YO: ELIMINE ESTO YA QUE CONSIDERE QUE NO HACIA FALTA VERIFICICAR SI EL ID EXISTE LLAMANDO AL METODO GET ID  YA QUE EL METODO RETORNA QUERYROWCOUNT, asi que si no encontro el id retorna 0] let id = entity.id; const previousEntity = await this.getByIdAsync(id);if (previousEntity == null) return 0;
 
         const sql = `UPDATE alumnos SET
                     nombre              = $2,
@@ -54,11 +46,11 @@ export default class AlumnosRepository {
 
         const values = [
             entity.id,
-            entity?.nombre ?? '',
-            entity?.apellido ?? '',
-            entity?.id_curso ?? 0,
-            entity?.fecha_nacimiento ?? null,
-            entity?.hace_deportes ?? 0
+            entity.nombre,
+            entity.apellido,
+            entity.id_curso,
+            entity.fecha_nacimiento || null,
+            entity.hace_deportes !== undefined ? entity.hace_deportes : false
         ];
         return await this.base.db.queryRowCount(sql, values);
     }
